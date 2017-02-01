@@ -1,0 +1,350 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		59EC1606B5C1BF40383A6D70C413D5D7 /* Pods-GlobalQuizMain-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8424534B3BE2618089CCEB32B3F97F /* Pods-GlobalQuizMain-dummy.m */; };
+		5DFA10706BD4C72A3C2F8E3C7049F5A0 /* Pods-GlobalQuizMain-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A78F92022B8271E353A69369D0BAD35D /* Pods-GlobalQuizMain-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E99FB79C44F30FBAB8CB85BDE7E9A030 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E184A7CBDD11C7A10659350AEDCE81F /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0A547D50982A170E950E5961EF27DAE0 /* Pods-GlobalQuizMain.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GlobalQuizMain.release.xcconfig"; sourceTree = "<group>"; };
+		0B8424534B3BE2618089CCEB32B3F97F /* Pods-GlobalQuizMain-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-GlobalQuizMain-dummy.m"; sourceTree = "<group>"; };
+		4D613AC5089BFBBFF090DE4A2F9E262F /* Pods_GlobalQuizMain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_GlobalQuizMain.framework; path = "Pods-GlobalQuizMain.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9CD10653301851EFFA900C4AE85058 /* Pods-GlobalQuizMain.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-GlobalQuizMain.modulemap"; sourceTree = "<group>"; };
+		6BA319BEDE2C61EF931A2C903D4AB329 /* Pods-GlobalQuizMain.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GlobalQuizMain.debug.xcconfig"; sourceTree = "<group>"; };
+		8E184A7CBDD11C7A10659350AEDCE81F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		94BA4F31603708CE1700276DF8EB51F9 /* Pods-GlobalQuizMain-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-GlobalQuizMain-acknowledgements.markdown"; sourceTree = "<group>"; };
+		A78F92022B8271E353A69369D0BAD35D /* Pods-GlobalQuizMain-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-GlobalQuizMain-umbrella.h"; sourceTree = "<group>"; };
+		BC66180145133E6EB9A1FEB0FEEEDBFB /* Pods-GlobalQuizMain-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GlobalQuizMain-acknowledgements.plist"; sourceTree = "<group>"; };
+		C144A05B7F2391897E24FE6CD3547FE3 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D0792E2B9439695843D5DC25C3D55757 /* Pods-GlobalQuizMain-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-GlobalQuizMain-frameworks.sh"; sourceTree = "<group>"; };
+		DB327D704E771E7124687EB501483417 /* Pods-GlobalQuizMain-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-GlobalQuizMain-resources.sh"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9759DC3C84292169AC2F347AB36C2968 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E99FB79C44F30FBAB8CB85BDE7E9A030 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1064004801271E863F1484BB234DDB15 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				E91CD00C8427DC5E96D03BC68A733037 /* Pods-GlobalQuizMain */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		1E8A97DD5FA4E39D1E94B7E5E4440CE7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4D613AC5089BFBBFF090DE4A2F9E262F /* Pods_GlobalQuizMain.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7DB346D0F39D3F0E887471402A8071AB = {
+			isa = PBXGroup;
+			children = (
+				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
+				BB99B8D4C7329D10E7E4451B0A72C15A /* Frameworks */,
+				1E8A97DD5FA4E39D1E94B7E5E4440CE7 /* Products */,
+				1064004801271E863F1484BB234DDB15 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		BB99B8D4C7329D10E7E4451B0A72C15A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CDDF067583365F4DC4C3532BD6D66E2B /* tvOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CDDF067583365F4DC4C3532BD6D66E2B /* tvOS */ = {
+			isa = PBXGroup;
+			children = (
+				8E184A7CBDD11C7A10659350AEDCE81F /* Foundation.framework */,
+			);
+			name = tvOS;
+			sourceTree = "<group>";
+		};
+		E91CD00C8427DC5E96D03BC68A733037 /* Pods-GlobalQuizMain */ = {
+			isa = PBXGroup;
+			children = (
+				C144A05B7F2391897E24FE6CD3547FE3 /* Info.plist */,
+				5D9CD10653301851EFFA900C4AE85058 /* Pods-GlobalQuizMain.modulemap */,
+				94BA4F31603708CE1700276DF8EB51F9 /* Pods-GlobalQuizMain-acknowledgements.markdown */,
+				BC66180145133E6EB9A1FEB0FEEEDBFB /* Pods-GlobalQuizMain-acknowledgements.plist */,
+				0B8424534B3BE2618089CCEB32B3F97F /* Pods-GlobalQuizMain-dummy.m */,
+				D0792E2B9439695843D5DC25C3D55757 /* Pods-GlobalQuizMain-frameworks.sh */,
+				DB327D704E771E7124687EB501483417 /* Pods-GlobalQuizMain-resources.sh */,
+				A78F92022B8271E353A69369D0BAD35D /* Pods-GlobalQuizMain-umbrella.h */,
+				6BA319BEDE2C61EF931A2C903D4AB329 /* Pods-GlobalQuizMain.debug.xcconfig */,
+				0A547D50982A170E950E5961EF27DAE0 /* Pods-GlobalQuizMain.release.xcconfig */,
+			);
+			name = "Pods-GlobalQuizMain";
+			path = "Target Support Files/Pods-GlobalQuizMain";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		9AAD9EE6648D551CF9776986ED5EB429 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DFA10706BD4C72A3C2F8E3C7049F5A0 /* Pods-GlobalQuizMain-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		4B837ED93A02F8CBC75CCD4C22319F0E /* Pods-GlobalQuizMain */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48FA84F5EFED640E3949BC98F6653A8A /* Build configuration list for PBXNativeTarget "Pods-GlobalQuizMain" */;
+			buildPhases = (
+				95A3AA95E8229859A98665F90A780B5D /* Sources */,
+				9759DC3C84292169AC2F347AB36C2968 /* Frameworks */,
+				9AAD9EE6648D551CF9776986ED5EB429 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Pods-GlobalQuizMain";
+			productName = "Pods-GlobalQuizMain";
+			productReference = 4D613AC5089BFBBFF090DE4A2F9E262F /* Pods_GlobalQuizMain.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0700;
+			};
+			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
+			productRefGroup = 1E8A97DD5FA4E39D1E94B7E5E4440CE7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4B837ED93A02F8CBC75CCD4C22319F0E /* Pods-GlobalQuizMain */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		95A3AA95E8229859A98665F90A780B5D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				59EC1606B5C1BF40383A6D70C413D5D7 /* Pods-GlobalQuizMain-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		127B0553742519E23100E12F448D7B84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+				TVOS_DEPLOYMENT_TARGET = 10.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3961D6C646559EBC9B3794E7AB96B679 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6BA319BEDE2C61EF931A2C903D4AB329 /* Pods-GlobalQuizMain.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-GlobalQuizMain/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-GlobalQuizMain/Pods-GlobalQuizMain.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_GlobalQuizMain;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		4F60B854B3A7FB53E72CD80B31224BA3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0A547D50982A170E950E5961EF27DAE0 /* Pods-GlobalQuizMain.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-GlobalQuizMain/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-GlobalQuizMain/Pods-GlobalQuizMain.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_GlobalQuizMain;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		5BA1D3775826187337FB7D0F220E3ECE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+				TVOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5BA1D3775826187337FB7D0F220E3ECE /* Debug */,
+				127B0553742519E23100E12F448D7B84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48FA84F5EFED640E3949BC98F6653A8A /* Build configuration list for PBXNativeTarget "Pods-GlobalQuizMain" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3961D6C646559EBC9B3794E7AB96B679 /* Debug */,
+				4F60B854B3A7FB53E72CD80B31224BA3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+}
