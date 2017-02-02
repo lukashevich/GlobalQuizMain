@@ -28,6 +28,7 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
 //    let serverName = "http://quiz.vany.od.ua"
   
   //  quiz.vany.od.ua/wp-json/quiz/test
+  var gameData:[[String:Any]]?
   
   @IBOutlet weak var firstAnswer: UILabel!
   @IBOutlet weak var secondAnswer: UILabel!
@@ -98,44 +99,41 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
     print(requestStr)
     
     Alamofire.request(requestStr).responseJSON { response in
-      print(response.request ?? "")  // original URL request
-      print("\n")
-      print(response.response ?? "") // HTTP URL response
-      print("\n")
-      print(response.data ?? "")     // server data
-      
-      print("\n")
-      print(response.result.value ?? "response")
 
-//      let res:String = "[{"question":"Как называют списки редких и находящихся под угрозой исчезновения видов растений и животных?","answers":"Синяя книга","Красная книга","Белая книга","Зеленая книга","correct":"2"},{"question":"К какой части света относится Шотландия?","answers":"Европа","Азия","Америка","Австралия","correct":"1"},{"question":"Что в анатомии не относят к туловищу?","answers":"Таз","Голову","Грудь","Живот","correct":"2"},{"question":"Крупнейшим городом какой страны является Нью-Йорк?","answers":"Испания","Великобритания","США","Австралия","correct":"3"}]"
+      let nextTryData:Data = (response.result.value as! String).data(using: .utf8)!
       
-      let nextTry:String = "{"+(response.result.value as! String)+"}"
-      let nextTryData:Data = nextTry.data(using: .utf8)!
+      self.gameData = try! JSONSerialization.jsonObject(with:nextTryData,
+                                                              options: JSONSerialization.ReadingOptions.mutableContainers) as! [[String : Any]]
       
-//      let jsonObject = try! JSONSerialization.jsonObject(with: nextTryData,
-//                                                              options: JSONSerialization.ReadingOptions.mutableContainers)
+      self.startGame()
       
-      self.questionLabel.text = "Как называют списки редких и находящихся под угрозой исчезновения видов растений и животных?"
-      
-      self.firstAnswer.text =  "Синяя книга"
-      self.secondAnswer.text =  "Красная книга"
-      self.thirdAnswer.text =  "Белая книга"
-      self.fourthAnswer.text =  "Зеленая книга"
-      
-      
-//       print("JSON: \(jsonObject)")
-      //      print(response.request )   // result of response serialization
-      //
-//      if let JSON:[[String:AnyObject]] = response.result.value as? [[String:AnyObject]]{
-//        
-//        print("JSON: \(JSON)")
-//      }
     }
+  }
+  
+  func startGame() {
     
-    
-    
+    showQuestion(qusestion: (self.gameData?.first!)!)
     
   }
+  
+  func showQuestion(qusestion:[String:Any]){
+    
+    self.questionLabel.text = qusestion["question"] as! String?
+    
+    self.firstAnswer.text =   (qusestion["answers"] as! Array)[0]
+    self.secondAnswer.text =  (qusestion["answers"] as! Array)[1]
+    self.thirdAnswer.text =   (qusestion["answers"] as! Array)[2]
+    self.fourthAnswer.text =  (qusestion["answers"] as! Array)[3]
+    
+    if((self.gameData?.count)! > 1) {
+      self.gameData?.removeFirst()
+      perform(#selector(startGame), with: nil, afterDelay: 2.0)
+    }
+    else {
+      perform(#selector(requestToServer), with: "test", afterDelay: 2.0)
+    }
+  }
+
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
