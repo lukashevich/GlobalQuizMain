@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "195C8C57C4A18F124AFF667649BEB0750BFAFB61",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "C989D8B1E1DBB3B92D30DC3BD3413B19DAB55171" : 9223372036854775807,
+    "195C8C57C4A18F124AFF667649BEB0750BFAFB61" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "861D5E4C-7DAC-4025-8C8C-C93E82E4E427",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "C989D8B1E1DBB3B92D30DC3BD3413B19DAB55171" : "",
+    "195C8C57C4A18F124AFF667649BEB0750BFAFB61" : "GQMain\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "GlobalQuizMain",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "GlobalQuizMain\/GlobalQuizMain.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/lukashevich\/GlobalQuizRemoteMain.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "195C8C57C4A18F124AFF667649BEB0750BFAFB61"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/lukashevich\/GlobalQuizRemote.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C989D8B1E1DBB3B92D30DC3BD3413B19DAB55171"
+    }
+  ]
+}

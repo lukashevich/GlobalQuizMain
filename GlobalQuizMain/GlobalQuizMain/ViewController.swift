@@ -10,6 +10,7 @@ import UIKit
 
 import UIKit
 import CoreBluetooth
+import Alamofire
 
 public let DEVICE_INFO_UUID = CBUUID(string: "180B")
 public let DEVICE_ANSWER_UUID = CBUUID(string: "180A")
@@ -24,15 +25,16 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
   //  var peripheral:CBPeripheral!
   let serverName = "http://quiz.vany.od.ua/wp-json/quiz"
   
-  //  let serverName = "http://quiz.vany.od.ua"
+//    let serverName = "http://quiz.vany.od.ua"
   
   //  quiz.vany.od.ua/wp-json/quiz/test
   
-//  @IBOutlet weak var firstAnswer: UIButton!
-//  @IBOutlet weak var secondAnswer: UIButton!
-//  @IBOutlet weak var thirdAnswer: UIButton!
-//  @IBOutlet weak var fourthAnswer: UIButton!
+  @IBOutlet weak var firstAnswer: UILabel!
+  @IBOutlet weak var secondAnswer: UILabel!
+  @IBOutlet weak var thirdAnswer: UILabel!
+  @IBOutlet weak var fourthAnswer: UILabel!
   
+  @IBOutlet weak var questionLabel: UILabel!
   
   let BEAN_NAME = "Robu"
   let BEAN_SCRATCH_UUID =
@@ -48,6 +50,8 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
     centralManager = CBCentralManager.init(delegate: self, queue: nil)
     data = NSMutableData()
     
+    requestToServer(methodName: "test")
+
   }
   
   func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -84,34 +88,54 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
     
   }
   
-//  func requestToServer(methodName:String){
-//    
-//    
-//    let serverMethodName = methodName
-//    
-//    let requestStr = serverName + "/" + serverMethodName + "/"
-//    print(requestStr)
-//    
-//    Alamofire.request(requestStr).responseJSON { response in
-//      print(response.request ?? "")  // original URL request
-//      print("\n")
-//      print(response.response ?? "") // HTTP URL response
-//      print("\n")
-//      print(response.data ?? "")     // server data
-//      
-//      print("\n")
-//      //      print(response.request )   // result of response serialization
-//      //
+  func requestToServer(methodName:String){
+    
+    print("Request")
+
+    let serverMethodName = methodName
+    
+    let requestStr = serverName + "/" + serverMethodName + "/"
+    print(requestStr)
+    
+    Alamofire.request(requestStr).responseJSON { response in
+      print(response.request ?? "")  // original URL request
+      print("\n")
+      print(response.response ?? "") // HTTP URL response
+      print("\n")
+      print(response.data ?? "")     // server data
+      
+      print("\n")
+      print(response.result.value ?? "response")
+
+//      let res:String = "[{"question":"Как называют списки редких и находящихся под угрозой исчезновения видов растений и животных?","answers":"Синяя книга","Красная книга","Белая книга","Зеленая книга","correct":"2"},{"question":"К какой части света относится Шотландия?","answers":"Европа","Азия","Америка","Австралия","correct":"1"},{"question":"Что в анатомии не относят к туловищу?","answers":"Таз","Голову","Грудь","Живот","correct":"2"},{"question":"Крупнейшим городом какой страны является Нью-Йорк?","answers":"Испания","Великобритания","США","Австралия","correct":"3"}]"
+      
+      let nextTry:String = "{"+(response.result.value as! String)+"}"
+      let nextTryData:Data = nextTry.data(using: .utf8)!
+      
+//      let jsonObject = try! JSONSerialization.jsonObject(with: nextTryData,
+//                                                              options: JSONSerialization.ReadingOptions.mutableContainers)
+      
+      self.questionLabel.text = "Как называют списки редких и находящихся под угрозой исчезновения видов растений и животных?"
+      
+      self.firstAnswer.text =  "Синяя книга"
+      self.secondAnswer.text =  "Красная книга"
+      self.thirdAnswer.text =  "Белая книга"
+      self.fourthAnswer.text =  "Зеленая книга"
+      
+      
+//       print("JSON: \(jsonObject)")
+      //      print(response.request )   // result of response serialization
+      //
 //      if let JSON:[[String:AnyObject]] = response.result.value as? [[String:AnyObject]]{
 //        
 //        print("JSON: \(JSON)")
 //      }
-//    }
-//    
-//    
-//    
-//    
-//  }
+    }
+    
+    
+    
+    
+  }
   
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
