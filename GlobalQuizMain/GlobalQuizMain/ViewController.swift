@@ -17,9 +17,21 @@ public let DEVICE_ANSWER_UUID = CBUUID(string: "180A")
 
 class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDelegate {
   
+    let PERIPHERAL_UUID =
+        CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74aa")
+    
+    let PERIPHERAL_SERVICE_UUID =
+        CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74aa")
+    
+    let PERIPHERAL_SENDING_CHAR =
+        CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74dd")
+    
+    let PERIPHERAL_RECEIVING_CHAR =
+        CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74bb")
+    
   var centralManager:CBCentralManager?
   var discoveredPeripheral:CBPeripheral?
-  
+    var peripherals:NSMutableArray?
   var data:NSMutableData?
   //  var manager:CBCentralManager!
   //  var peripheral:CBPeripheral!
@@ -37,15 +49,19 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
   
   @IBOutlet weak var questionLabel: UILabel!
   
-  let BEAN_NAME = "Robu"
-  let BEAN_SCRATCH_UUID =
-    CBUUID(string: "a495ff21-c5b1-4b44-b512-1370f02d74de")
-  let BEAN_SERVICE_UUID =
-    CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74de")
-  
+//  let BEAN_SCRATCH_UUID =
+//    CBUUID(string: "a495ff21-c5b1-4b44-b512-1370f02d74de")
+//  let BEAN_SERVICE_UUID =
+//    CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74de")
+//    let BEAN_SERVICE_2_UUID =
+//        CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74db")
+//    
+//    let BEAN_CHAR_UUID =
+//        CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74da")
+    
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    peripherals = NSMutableArray()
     print("viewDidLoad")
     
     centralManager = CBCentralManager.init(delegate: self, queue: nil)
@@ -74,21 +90,24 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
   func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
     print("DIscovered ")
     print(peripheral.name ?? "NOTHING")
-    print(peripheral.services)
+    print(peripheral.services ?? "nil")
     print(RSSI)
     
     if discoveredPeripheral != peripheral {
       discoveredPeripheral = peripheral
+        peripheral.delegate = self
+        peripherals?.add(peripheral)
       print("Connecting ")
       centralManager?.connect(peripheral, options: nil)
       
     }
-    
-    print("\n\n\n\n\n\n\n\n\n\n\n")
-    
-    
-  }
+}
   
+    func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
+        print("didModifyServices")
+        print(invalidatedServices)
+    }
+    
   func requestToServer(methodName:String){
     
     print("Request")
@@ -125,13 +144,13 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
     self.thirdAnswer.text =   (qusestion["answers"] as! Array)[2]
     self.fourthAnswer.text =  (qusestion["answers"] as! Array)[3]
     
-    if((self.gameData?.count)! > 1) {
-      self.gameData?.removeFirst()
-      perform(#selector(startGame), with: nil, afterDelay: 2.0)
-    }
-    else {
-      perform(#selector(requestToServer), with: "test", afterDelay: 2.0)
-    }
+//    if((self.gameData?.count)! > 1) {
+//      self.gameData?.removeFirst()
+//      perform(#selector(startGame), with: nil, afterDelay: 2.0)
+//    }
+//    else {
+//      perform(#selector(requestToServer), with: "test", afterDelay: 2.0)
+//    }
   }
 
   
@@ -142,16 +161,32 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
   
   
   func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+    print("didDiscoverServices")
     for service:CBService in peripheral.services! {
-      peripheral.discoverCharacteristics([BEAN_SERVICE_UUID], for: service)
+      peripheral.discoverCharacteristics([PERIPHERAL_SENDING_CHAR], for: service)
     }
   }
   
   func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+     print("didDiscoverCharacteristicsFor")
+    print(service.characteristics)
+    print(service.uuid)
     for char:CBCharacteristic in service.characteristics! {
-      if  char.uuid.isEqual(BEAN_SERVICE_UUID) {
+        print(char.uuid)
+
+      if  char.uuid.isEqual(PERIPHERAL_SENDING_CHAR) {
         peripheral.setNotifyValue(true, for: char)
-      }
+        
+        print(NSKeyedArchiver.archivedData(withRootObject: (self.gameData?.first!)!))
+        print("SUCCESS".data(using:String.Encoding.utf8)!)
+
+        peripheral.writeValue("SUCCESS".data(using:String.Encoding.utf8)!, for:char, type:CBCharacteristicWriteType.withResponse)
+        //peripheral.writeValue(NSKeyedArchiver.archivedData(withRootObject: (self.gameData?.first!)!), for:char, type:CBCharacteristicWriteType.withResponse)
+
+      } else if char.uuid.isEqual(PERIPHERAL_RECEIVING_CHAR) {
+        peripheral.setNotifyValue(true, for: char)
+
+        }
     }
   }
   
@@ -160,7 +195,7 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
     let strFromData:NSString = NSString.init(data: data?.copy() as! Data, encoding: String.Encoding.utf8.rawValue)!
     
     if strFromData.isEqual("EOM") {
-      
+      print("didUpdateValueFor")
       peripheral.setNotifyValue(false, for: characteristic)
       centralManager?.cancelPeripheralConnection(peripheral)
     }
@@ -172,16 +207,21 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
   func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
     
     if characteristic.isNotifying {
+        characteristic.value
       print("Notification begins")
     } else {
-      centralManager?.cancelPeripheralConnection(peripheral)
+        print("didUpdateNotificationStateFor")
     }
   }
   
   
   func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-    discoveredPeripheral = nil
-    centralManager?.scanForPeripherals(withServices: [BEAN_SERVICE_UUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey:true])
+     print("didConnect")
+    peripheral.discoverServices([PERIPHERAL_SERVICE_UUID])
+    
+     print(peripheral.services ?? "nothing")
+
+    centralManager?.scanForPeripherals(withServices: [PERIPHERAL_SERVICE_UUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey:true])
   }
   
 //  @IBAction func aswerPressed(_ sender: Any) {

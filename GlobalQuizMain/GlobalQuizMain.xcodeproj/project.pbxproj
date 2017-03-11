@@ -245,6 +245,14 @@
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = SZZH8KK7M7;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes.appletvos = {
+								enabled = 1;
+							};
+							com.apple.GameControllers.appletvos = {
+								enabled = 0;
+							};
+						};
 					};
 					7F7BF5D71E41FEDB00894886 = {
 						CreatedOnToolsVersion = 8.2.1;
