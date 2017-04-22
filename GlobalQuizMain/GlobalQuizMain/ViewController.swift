@@ -23,11 +23,14 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
     let PERIPHERAL_SERVICE_UUID =
         CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74aa")
     
-    let PERIPHERAL_SENDING_CHAR =
+    let PERIPHERAL_START_GAME_CHAR =
         CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74dd")
     
-    let PERIPHERAL_RECEIVING_CHAR =
+    let PERIPHERAL_ENABLE_ANSWER_CHAR =
         CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74bb")
+    
+    let PERIPHERAL_ANSWER_CHAR =
+        CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74db")
     
   var centralManager:CBCentralManager?
   var discoveredPeripheral:CBPeripheral?
@@ -81,7 +84,7 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
     case .poweredOn:
       print("Bluetooth is currently powered on and available to use.")
       
-      let services = [DEVICE_INFO_UUID, DEVICE_ANSWER_UUID]
+//      let services = [PERIPHERAL_SENDING_CHAR, PERIPHERAL_SERVICE_UUID]
       centralManager?.scanForPeripherals(withServices: nil, options: nil)
     default:break
     }
@@ -163,7 +166,7 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
   func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
     print("didDiscoverServices")
     for service:CBService in peripheral.services! {
-      peripheral.discoverCharacteristics([PERIPHERAL_SENDING_CHAR], for: service)
+      peripheral.discoverCharacteristics([PERIPHERAL_START_GAME_CHAR, PERIPHERAL_ENABLE_ANSWER_CHAR, PERIPHERAL_ANSWER_CHAR], for: service)
     }
   }
   
@@ -174,38 +177,46 @@ class ViewController: UIViewController ,CBCentralManagerDelegate, CBPeripheralDe
     for char:CBCharacteristic in service.characteristics! {
         print(char.uuid)
 
-      if  char.uuid.isEqual(PERIPHERAL_SENDING_CHAR) {
-        peripheral.setNotifyValue(true, for: char)
+      if  char.uuid.isEqual(PERIPHERAL_START_GAME_CHAR) {
+//        peripheral.setNotifyValue(true, for: char)
         
         print(NSKeyedArchiver.archivedData(withRootObject: (self.gameData?.first!)!))
-        print("SUCCESS".data(using:String.Encoding.utf8)!)
 
-        peripheral.writeValue("SUCCESS".data(using:String.Encoding.utf8)!, for:char, type:CBCharacteristicWriteType.withResponse)
+        peripheral.writeValue("Start".data(using:String.Encoding.utf8)!, for:char, type:CBCharacteristicWriteType.withResponse)
+        
         //peripheral.writeValue(NSKeyedArchiver.archivedData(withRootObject: (self.gameData?.first!)!), for:char, type:CBCharacteristicWriteType.withResponse)
 
-      } else if char.uuid.isEqual(PERIPHERAL_RECEIVING_CHAR) {
+      } else if char.uuid.isEqual(PERIPHERAL_ANSWER_CHAR) {
         peripheral.setNotifyValue(true, for: char)
 
         }
     }
   }
-  
+
+    
   func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+
+    let data:Data = characteristic.value!
     
-    let strFromData:NSString = NSString.init(data: data?.copy() as! Data, encoding: String.Encoding.utf8.rawValue)!
     
-    if strFromData.isEqual("EOM") {
-      print("didUpdateValueFor")
-      peripheral.setNotifyValue(false, for: characteristic)
-      centralManager?.cancelPeripheralConnection(peripheral)
+    print(NSString(data: data, encoding: String.Encoding.utf8.rawValue) ?? "FUCK")
+
+    if((self.gameData?.count)! > 1) {
+        self.gameData?.removeFirst()
+        startGame()
+//        perform(#selector(startGame), with: nil, afterDelay: 2.0)
     }
-    
-    data?.append(characteristic.value!)
+    else {
+        requestToServer(methodName: "test")
+//        perform(#selector(requestToServer), with: "test", afterDelay: 2.0)
+    }
     
   }
   
   func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
     
+    print(error.debugDescription)
+
     if characteristic.isNotifying {
         characteristic.value
       print("Notification begins")
