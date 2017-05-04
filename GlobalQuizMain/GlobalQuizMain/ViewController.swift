@@ -47,7 +47,6 @@ class ViewController: UIViewController {
   @IBOutlet weak var secondAnswer: UILabel!
   @IBOutlet weak var thirdAnswer: UILabel!
   @IBOutlet weak var fourthAnswer: UILabel!
-  
   @IBOutlet weak var questionLabel: UILabel!
   
 //  let BEAN_SCRATCH_UUID =
@@ -71,6 +70,8 @@ class ViewController: UIViewController {
     requestToServer(methodName: "test")
 
   }
+  
+
   
 //  func centralManagerDidUpdateState(_ central: CBCentralManager) {
 //    

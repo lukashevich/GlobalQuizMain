@@ -26,6 +26,10 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
   let PERIPHERAL_ANSWER_CHAR =
     CBUUID(string: "a495ff20-c5b1-4b44-b512-1370f02d74db")
   
+  let PERIPHERAL_THEME_CHAR =
+    CBUUID(string: "b495ff20-c5b1-4b44-b512-1370f02d74db")
+  
+  
   var centralManager:CBCentralManager?
   var discoveredPeripheral:CBPeripheral?
   var peripherals:NSMutableArray = NSMutableArray()
@@ -35,7 +39,7 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
   var iPhonePeripheral:CBPeripheral?
   var finded:[String:CBPeripheral] = [String:CBPeripheral]()
   
-  var game:ViewController?
+  var game:GQGameViewController?
   
   @IBOutlet weak var peripheralsTableView: UITableView!
   
@@ -77,7 +81,7 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     print(validatedPeripherals)
 
     if segue.identifier == "startGameSegue" {
-      game = (segue.destination as! ViewController)
+      game = (segue.destination as! GQGameViewController)
     }
   }
   
@@ -180,7 +184,13 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
   
   func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
     
-    game?.answerGetted(data: characteristic.value!)
+    if characteristic.uuid.isEqual(PERIPHERAL_ANSWER_CHAR) {
+       game?.answerGetted(data: characteristic.value!)
+    } else if characteristic.uuid.isEqual(PERIPHERAL_ANSWER_CHAR) {
+      game?.themeGetted(data: characteristic.value!)
+    }
+
+    
     
   }
   
