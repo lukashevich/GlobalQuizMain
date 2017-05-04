@@ -13,6 +13,7 @@
 		7F2217AB1EAB5A1100936E32 /* GQLobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2217AA1EAB5A1100936E32 /* GQLobbyViewController.swift */; };
 		7F62FDD21EBB3FEE00C7EA44 /* GQThemePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F62FDD11EBB3FEE00C7EA44 /* GQThemePickerViewController.swift */; };
 		7F62FDD41EBB5A4A00C7EA44 /* GQGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F62FDD31EBB5A4A00C7EA44 /* GQGameViewController.swift */; };
+		7F62FDD61EBB719D00C7EA44 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F62FDD51EBB719D00C7EA44 /* Defines.swift */; };
 		7F7BF5C81E41FEDA00894886 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7BF5C71E41FEDA00894886 /* AppDelegate.swift */; };
 		7F7BF5CA1E41FEDA00894886 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7BF5C91E41FEDA00894886 /* ViewController.swift */; };
 		7F7BF5CD1E41FEDA00894886 /* GlobalQuizMain.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7F7BF5CB1E41FEDA00894886 /* GlobalQuizMain.xcdatamodeld */; };
@@ -46,6 +47,7 @@
 		7F2217AA1EAB5A1100936E32 /* GQLobbyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GQLobbyViewController.swift; sourceTree = "<group>"; };
 		7F62FDD11EBB3FEE00C7EA44 /* GQThemePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GQThemePickerViewController.swift; sourceTree = "<group>"; };
 		7F62FDD31EBB5A4A00C7EA44 /* GQGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GQGameViewController.swift; sourceTree = "<group>"; };
+		7F62FDD51EBB719D00C7EA44 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
 		7F7BF5C41E41FEDA00894886 /* GlobalQuizMain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GlobalQuizMain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F7BF5C71E41FEDA00894886 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7F7BF5C91E41FEDA00894886 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 				7F2217AA1EAB5A1100936E32 /* GQLobbyViewController.swift */,
 				7F62FDD11EBB3FEE00C7EA44 /* GQThemePickerViewController.swift */,
 				7F62FDD31EBB5A4A00C7EA44 /* GQGameViewController.swift */,
+				7F62FDD51EBB719D00C7EA44 /* Defines.swift */,
 			);
 			path = GlobalQuizMain;
 			sourceTree = "<group>";
@@ -377,6 +380,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F62FDD61EBB719D00C7EA44 /* Defines.swift in Sources */,
 				7F62FDD21EBB3FEE00C7EA44 /* GQThemePickerViewController.swift in Sources */,
 				7F7BF5CD1E41FEDA00894886 /* GlobalQuizMain.xcdatamodeld in Sources */,
 				7F62FDD41EBB5A4A00C7EA44 /* GQGameViewController.swift in Sources */,

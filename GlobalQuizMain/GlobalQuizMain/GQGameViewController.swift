@@ -40,7 +40,10 @@ class GQGameViewController: UIViewController {
   //  quiz.vany.od.ua/wp-json/quiz/test
   var gameData:[[String:Any]]?
   var themes:[String:Any]?
+var gameRound = 1
+  var rightAnswer = 0
 
+  
   @IBOutlet weak var pickerView: UIView!
   
   @IBOutlet weak var questionView: UIVisualEffectView!
@@ -70,7 +73,7 @@ class GQGameViewController: UIViewController {
     //    centralManager = CBCentralManager.init(delegate: self, queue: nil)
     data = NSMutableData()
     
-    requestForThemes(forRound: 0)
+    requestForThemes(forRound: gameRound)
     
   }
   
@@ -85,17 +88,20 @@ class GQGameViewController: UIViewController {
     //    Alamofire.request(requestStr).responseJSON { response in
     
     //      let nextTryData:Data = (response.result.value as! String).data(using: .utf8)!
+
     
+    questionLabel.text = gameTypes[gameRound%(gameTypes.count)]
     
     let nextTryData:Data = "{\"id1\":\"Название темы1\", \"id2\":\"Название темы2\", \"id3\":\"Название темы3\", \"id4\":\"Название темы4\"}".data(using: .utf8)!
     
     self.themes = try! JSONSerialization.jsonObject(with:nextTryData,
                                                       options: JSONSerialization.ReadingOptions.mutableContainers) as! [String : Any]
-    
-//    self.startGame()
+    showThemes(theme: self.themes!)
+    self.pickerView.isHidden = false
+
     
     let data:Data = "firstPicked".data(using: .utf8)!
-    perform(#selector(themeGetted), with: data, afterDelay: 5.0)
+    perform(#selector(themeGetted), with: data, afterDelay: 2.0)
 
     
     //    }
@@ -187,18 +193,44 @@ class GQGameViewController: UIViewController {
   
   func startGame() {
     
-    showQuestion(qusestion: (self.gameData?.first!)!)
+    showQuestion(question: (self.gameData?.first!)!)
     
   }
   
-  func showQuestion(qusestion:[String:Any]){
+  func showQuestion(question:[String:Any]){
     
-    self.questionLabel.text = qusestion["question"] as! String?
+    self.questionLabel.text = question["question"] as! String?
     
-    self.firstAnswer.text =   (qusestion["answers"] as! Array)[0]
-    self.secondAnswer.text =  (qusestion["answers"] as! Array)[1]
-    self.thirdAnswer.text =   (qusestion["answers"] as! Array)[2]
-    self.fourthAnswer.text =  (qusestion["answers"] as! Array)[3]
+    rightAnswer = Int((question["correct"] as! String?)!)!
+   
+    self.firstAnswer.text =   (question["answers"] as! Array)[0]
+    self.secondAnswer.text =  (question["answers"] as! Array)[1]
+    self.thirdAnswer.text =   (question["answers"] as! Array)[2]
+    self.fourthAnswer.text =  (question["answers"] as! Array)[3]
+    
+    
+    let data:Data = "4".data(using: .utf8)!
+    perform(#selector(answerGetted), with: data, afterDelay: 1)
+    
+    //    if((self.gameData?.count)! > 1) {
+    //      self.gameData?.removeFirst()
+    //      perform(#selector(startGame), with: nil, afterDelay: 2.0)
+    //    }
+    //    else {
+    //      perform(#selector(requestToServer), with: "test", afterDelay: 2.0)
+    //    }
+  }
+  
+  func showThemes(theme:[String:Any]){
+    
+    self.questionLabel.text = gameTypes[gameRound%(gameTypes.count)]
+    
+    let keys = Array(theme.keys)
+    
+    self.firstAnswer.text =   theme[keys[0]] as? String
+    self.secondAnswer.text =  theme[keys[1]] as? String
+    self.thirdAnswer.text =   theme[keys[2]] as? String
+    self.fourthAnswer.text =  theme[keys[3]] as? String
     
     //    if((self.gameData?.count)! > 1) {
     //      self.gameData?.removeFirst()
@@ -269,17 +301,26 @@ class GQGameViewController: UIViewController {
   
   func answerGetted(data:Data){
     
+    if(NSString(data: data, encoding: String.Encoding.utf8.rawValue)?.isEqual(to: String(rightAnswer)))!{
+      print("RIGHT")
+    }else {
+      print("WRONG")
+    }
+//    pickerView.isHidden = true
+
     //    print(NSString(data: data, encoding: String.Encoding.utf8.rawValue) ?? "FUCK")
     //
-    //    if((self.gameData?.count)! > 1) {
-    //      self.gameData?.removeFirst()
-    //      startGame()
-    //      //        perform(#selector(startGame), with: nil, afterDelay: 2.0)
-    //    }
-    //    else {
-    //      requestToServer(methodName: "test")
-    //      //        perform(#selector(requestToServer), with: "test", afterDelay: 2.0)
-    //    }
+        if((self.gameData?.count)! > 1) {
+          self.gameData?.removeFirst()
+          showQuestion(question: (self.gameData?.first!)!)
+          //        perform(#selector(startGame), with: nil, afterDelay: 2.0)
+        }
+        else {
+           pickerView.isHidden = true
+          gameRound = gameRound + 1
+          requestForThemes(forRound: gameRound)
+          //        perform(#selector(requestToServer), with: "test", afterDelay: 2.0)
+        }
     
   }
   
