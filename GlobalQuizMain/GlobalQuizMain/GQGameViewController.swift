@@ -40,8 +40,14 @@ class GQGameViewController: UIViewController {
   //  quiz.vany.od.ua/wp-json/quiz/test
   var gameData:[[String:Any]]?
   var themes:[String:Any]?
-var gameRound = 1
+  var gameRound = 0
   var rightAnswer = 0
+
+  let playersCount = 4
+  var gettedAnswers:NSMutableArray = NSMutableArray()
+  var roundResults:[String:Any] = [String:Any]()
+  
+  var playersPoints:[String:Int] = [String:Int]()
 
   
   @IBOutlet weak var pickerView: UIView!
@@ -66,6 +72,12 @@ var gameRound = 1
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    for i in 1...playersCount {
+      roundResults[String(i)] = NSMutableArray()
+      playersPoints[String(i)] = 0
+    }
+//
+//    print(roundResults)
     pickerView.bringSubview(toFront: questionView)
     //    peripherals = NSMutableArray()
     //    print("viewDidLoad")
@@ -78,7 +90,6 @@ var gameRound = 1
   }
   
   func requestForThemes(forRound:Int)  {
-    print("Request")
     
 //    let serverMethodName = methodName
 //    
@@ -208,9 +219,17 @@ var gameRound = 1
     self.thirdAnswer.text =   (question["answers"] as! Array)[2]
     self.fourthAnswer.text =  (question["answers"] as! Array)[3]
     
+//    
+//    let data:Data = "{\"id\":\(1),\"time\":\(Date().timeIntervalSince1970),\"answer\":\(1)}".data(using: .utf8)!
+//    perform(#selector(answerGetted), with: data, afterDelay: 1)
     
-    let data:Data = "4".data(using: .utf8)!
-    perform(#selector(answerGetted), with: data, afterDelay: 1)
+    
+    for playerId in 1...playersCount {
+      let randomAnswer = Int(arc4random_uniform(3)+1)
+      let randomAnswerTime = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+      let data:Data = "{\"id\":\(playerId),\"time\":\(randomAnswerTime),\"answer\":\(randomAnswer)}".data(using: .utf8)!
+      perform(#selector(answerGetted), with: data, afterDelay: TimeInterval(randomAnswerTime))
+    }
     
     //    if((self.gameData?.count)! > 1) {
     //      self.gameData?.removeFirst()
@@ -278,7 +297,10 @@ var gameRound = 1
   func themeGetted(data:Data){
     
     pickerView.isHidden = true
-    print( NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String)
+    gameRound = gameRound + 1
+    gettedAnswers.removeAllObjects()
+
+//    print( NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String)
     requestForQuestions(theme: "test")
 
 //    requestForQuestions(theme: NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String)
@@ -301,27 +323,151 @@ var gameRound = 1
   
   func answerGetted(data:Data){
     
-    if(NSString(data: data, encoding: String.Encoding.utf8.rawValue)?.isEqual(to: String(rightAnswer)))!{
-      print("RIGHT")
-    }else {
-      print("WRONG")
-    }
+    let gettedAnswer = try! JSONSerialization.jsonObject(with:data,
+                                                    options: JSONSerialization.ReadingOptions.mutableContainers) as! [String : Any]
+    
+    
+    let playerRes:NSMutableDictionary = NSMutableDictionary()
+    playerRes.setObject((gettedAnswer["answer"] as! Int == rightAnswer), forKey: "isCorrect" as NSCopying)
+    playerRes.setObject(gettedAnswer["time"] ?? 0, forKey: "time" as NSCopying)
+    playerRes.setObject(String(describing: Int(gettedAnswer["id"] as! Int)), forKey: "id" as NSCopying)
+
+    (roundResults[String(describing: Int(gettedAnswer["id"] as! Int))] as! NSMutableArray).add(playerRes)
+
+    gettedAnswers.add(playerRes)
+//    print(gettedAnswers.count)
+//    if(String(describing: gettedAnswer["answer"]).isEqual(String(rightAnswer))){
+//    if gettedAnswer["answer"] as! Int == rightAnswer {
+//      
+//      print("RIGHT")
+//    }else {
+//      
+//      print("WRONG")
+//    }
+    
 //    pickerView.isHidden = true
 
     //    print(NSString(data: data, encoding: String.Encoding.utf8.rawValue) ?? "FUCK")
     //
-        if((self.gameData?.count)! > 1) {
-          self.gameData?.removeFirst()
-          showQuestion(question: (self.gameData?.first!)!)
-          //        perform(#selector(startGame), with: nil, afterDelay: 2.0)
-        }
-        else {
-           pickerView.isHidden = true
-          gameRound = gameRound + 1
-          requestForThemes(forRound: gameRound)
-          //        perform(#selector(requestToServer), with: "test", afterDelay: 2.0)
-        }
     
+    guard gettedAnswers.count == playersCount else {
+      return
+    }
+    
+    guard ((self.gameData?.count)! > 1) else {
+      pickerView.isHidden = true
+      requestForThemes(forRound: gameRound)
+      return
+    }
+    
+    
+    print(getQuestionWinner())
+    self.gameData?.removeFirst()
+    showQuestion(question: (self.gameData?.first!)!)
+    
+    
+    
+//        if((self.gameData?.count)! > 1) {
+//          
+//          guard gettedAnswers.count == playersCount else {
+//            return
+//          }
+//          
+//          print(getQuestionWinner())
+//          self.gameData?.removeFirst()
+//          showQuestion(question: (self.gameData?.first!)!)
+//          //        perform(#selector(startGame), with: nil, afterDelay: 2.0)
+//        }
+//        else {
+//          
+//          if gettedAnswers.count == playersCount {
+//            print(getQuestionWinner())
+//          }
+////          print("\n\n\n\n\n")
+////          print(roundResults)
+//
+////          let winner = getRoundWinner(round: gameRound)
+////          gettedAnswers.removeAllObjects()
+//
+//           pickerView.isHidden = true
+////          gameRound = gameRound + 1
+//          requestForThemes(forRound: gameRound)
+//          //        perform(#selector(requestToServer), with: "test", afterDelay: 2.0)
+//        }
+    
+  }
+  
+  func getQuestionWinner() -> Int {
+
+    let sortedArray = (gettedAnswers as NSArray).sortedArray(using: [NSSortDescriptor(key: "isCorrect", ascending: false)]) as! [[String:AnyObject]]
+
+    
+    for i in 0...sortedArray.count-1 {
+      let item = sortedArray[i]
+      if ((item as [String:Any])["isCorrect"] as! Bool) {
+        let playerPoints:Int = playersPoints[(item as [String:Any])["id"] as! String]!
+        var pointsToAdd = 0
+        
+        switch gameRound%(gameTypes.count) + 1 {
+          
+        case 1:
+          pointsToAdd = 100
+          playersPoints[(item as [String:Any])["id"] as! String] = playerPoints + pointsToAdd
+          break
+          
+        case 2:
+          pointsToAdd = 100*(playersCount-i)
+          playersPoints[(item as [String:Any])["id"] as! String] = playerPoints + pointsToAdd
+          break
+          
+        case 3:
+          let x = (item as [String:Any])["time"] as! Float
+          let y = Double(round(100*x)/1000)
+          pointsToAdd = Int(100*y)
+          break
+          
+        case 4:
+          break
+          
+          
+        default:
+          break
+        }
+        
+        playersPoints[(item as [String:Any])["id"] as! String] = playerPoints + pointsToAdd
+
+      }
+    }
+
+
+    
+    print(playersPoints)
+//    print("\n\n\n")
+//
+//    print(gettedAnswers)
+
+    gettedAnswers.removeAllObjects()
+
+    return 2
+  }
+  
+  func getRoundWinner(round: Int) -> Int {
+    
+    let pointsArray:NSMutableDictionary = NSMutableDictionary()
+    
+    let keys = Array(roundResults.keys)
+
+    for key in keys {
+      var points = 0
+      for i in 0...(roundResults[key] as! NSMutableArray).count-1 {
+        let res:NSMutableDictionary = (roundResults[key] as! NSMutableArray)[i] as! NSMutableDictionary
+        points = points + (res["isCorrect"] as! Bool).hashValue
+      }
+      pointsArray.setObject(points, forKey: key as NSCopying)
+    }
+    
+    print(pointsArray)
+    return 0
   }
   
   //  func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
