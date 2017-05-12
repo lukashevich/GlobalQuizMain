@@ -288,6 +288,13 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wBn-58-2EZ">
+                                        <rect key="frame" x="1625" y="12" width="236" height="116"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="59"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
@@ -301,6 +308,7 @@
                         <outlet property="questionView" destination="Uei-Uv-kuU" id="uDA-gd-MKN"/>
                         <outlet property="secondAnswer" destination="UXE-xS-I8O" id="s1i-My-wJh"/>
                         <outlet property="thirdAnswer" destination="QId-eh-Vw6" id="gvV-vO-fK5"/>
+                        <outlet property="timerLabel" destination="wBn-58-2EZ" id="FwG-V5-CPE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fYa-pn-C8D" userLabel="First Responder" sceneMemberID="firstResponder"/>
