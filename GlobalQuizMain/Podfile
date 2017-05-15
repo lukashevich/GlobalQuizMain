@@ -1,8 +1,12 @@
-platform :tvos, '10.0'
 
 use_frameworks!
 
 target 'GlobalQuizMain' do
+platform :tvos, '10.0'
 pod 'Alamofire', '~> 4.3'
+end
 
+target 'MainOnIPad' do
+platform :ios, '9.0'
+pod 'Alamofire', '~> 4.3'
 end

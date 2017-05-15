@@ -79,9 +79,11 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     print("validatedPeripherals")
 
     print(validatedPeripherals)
+    print(peripherals)
 
     if segue.identifier == "startGameSegue" {
       game = (segue.destination as! GQGameViewController)
+      game?.playersCount = peripherals.count
     }
   }
   
@@ -169,9 +171,13 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
       if  char.uuid.isEqual(PERIPHERAL_START_GAME_CHAR) {
         //        peripheral.setNotifyValue(true, for: char)
         
-        
-        peripheral.writeValue("Start".data(using:String.Encoding.utf8)!, for:char, type:CBCharacteristicWriteType.withResponse)
-        
+        let playerId:Int = (peripherals.index(of: peripheral))
+
+        peripheral.writeValue("Start,\(playerId+1)".data(using:String.Encoding.utf8)!, for:char, type:CBCharacteristicWriteType.withResponse)
+//        let playerIdData = Data(bytes: &playerId,
+//                             count: MemoryLayout.size(ofValue: playerId))
+//        peripheral.writeValue(playerIdData, for:char, type:CBCharacteristicWriteType.withResponse)
+
         //peripheral.writeValue(NSKeyedArchiver.archivedData(withRootObject: (self.gameData?.first!)!), for:char, type:CBCharacteristicWriteType.withResponse)
         
       } else if char.uuid.isEqual(PERIPHERAL_ANSWER_CHAR) {

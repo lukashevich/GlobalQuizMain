@@ -146,13 +146,13 @@ class ViewController: UIViewController {
     self.thirdAnswer.text =   (qusestion["answers"] as! Array)[2]
     self.fourthAnswer.text =  (qusestion["answers"] as! Array)[3]
     
-//    if((self.gameData?.count)! > 1) {
-//      self.gameData?.removeFirst()
-//      perform(#selector(startGame), with: nil, afterDelay: 2.0)
-//    }
-//    else {
-//      perform(#selector(requestToServer), with: "test", afterDelay: 2.0)
-//    }
+    if((self.gameData?.count)! > 1) {
+      self.gameData?.removeFirst()
+      perform(#selector(startGame), with: nil, afterDelay: 2.0)
+    }
+    else {
+      perform(#selector(requestToServer), with: "test", afterDelay: 2.0)
+    }
   }
 
 

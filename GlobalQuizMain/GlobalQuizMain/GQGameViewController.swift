@@ -21,7 +21,7 @@ class GQGameViewController: UIViewController {
   var gameRound = 0
   var rightAnswer = 0
 
-  let playersCount = 4
+  var playersCount:Int!
   var gettedAnswers:NSMutableArray = NSMutableArray()
   var roundResults:[String:Any] = [String:Any]()
   
@@ -38,6 +38,8 @@ class GQGameViewController: UIViewController {
   @IBOutlet weak var thirdAnswer: UILabel!
   @IBOutlet weak var fourthAnswer: UILabel!
   @IBOutlet weak var questionLabel: UILabel!
+  
+  var questionTime:TimeInterval!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -139,7 +141,7 @@ class GQGameViewController: UIViewController {
       return
     }
     
-    getQuestionWinner()
+    setPointsToPlayers()
     
     self.gameData?.removeFirst()
     showQuestion(question: (self.gameData?.first!)!)
@@ -149,6 +151,8 @@ class GQGameViewController: UIViewController {
   func showQuestion(question:[String:Any]){
     
     print(playersPoints)
+    
+    questionTime = Date().timeIntervalSince1970
     
     self.pickerView.isHidden = false
     self.questionLabel.text = question["question"] as! String?
@@ -162,12 +166,12 @@ class GQGameViewController: UIViewController {
     
     runTimer()
    
-    for playerId in 1...playersCount-1 {
-      let randomAnswer = Int(arc4random_uniform(3)+1)
-      let randomAnswerTime = 1+CGFloat(Float(arc4random()) / Float(UINT32_MAX))
-      let data:Data = "{\"id\":\(playerId),\"time\":\(randomAnswerTime),\"answer\":\(randomAnswer)}".data(using: .utf8)!
-      perform(#selector(answerGetted), with: data, afterDelay: TimeInterval(randomAnswerTime))
-    }
+//    for playerId in 1...playersCount-1 {
+//      let randomAnswer = Int(arc4random_uniform(3)+1)
+//      let randomAnswerTime = 1+CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+//      let data:Data = "{\"id\":\(playerId),\"time\":\(randomAnswerTime),\"answer\":\(randomAnswer)}".data(using: .utf8)!
+//      perform(#selector(answerGetted), with: data, afterDelay: TimeInterval(randomAnswerTime))
+//    }
     
     
     
@@ -200,16 +204,16 @@ class GQGameViewController: UIViewController {
   
   func answerGetted(data:Data){
     
-    let gettedAnswer = try! JSONSerialization.jsonObject(with:data,
-                                                    options: JSONSerialization.ReadingOptions.mutableContainers) as! [String : Any]
+    let gettedAnswer:String = String.init(data: data, encoding: .utf8)!
     
+    let answerComponents = gettedAnswer.components(separatedBy: ",")
     
     let playerRes:NSMutableDictionary = NSMutableDictionary()
-    playerRes.setObject((gettedAnswer["answer"] as! Int == rightAnswer), forKey: "isCorrect" as NSCopying)
-    playerRes.setObject(gettedAnswer["time"] ?? 0, forKey: "time" as NSCopying)
-    playerRes.setObject(String(describing: Int(gettedAnswer["id"] as! Int)), forKey: "id" as NSCopying)
+    playerRes.setObject((Int(answerComponents.first!) == rightAnswer), forKey: "isCorrect" as NSCopying)
+    playerRes.setObject(Date().timeIntervalSince1970 - questionTime, forKey: "time" as NSCopying)
+    playerRes.setObject(answerComponents.last!, forKey: "id" as NSCopying)
 
-    (roundResults[String(describing: Int(gettedAnswer["id"] as! Int))] as! NSMutableArray).add(playerRes)
+    (roundResults[playerRes["id"] as! String] as! NSMutableArray).add(playerRes)
 
     gettedAnswers.add(playerRes)
     
@@ -227,17 +231,20 @@ class GQGameViewController: UIViewController {
       return
     }
     
-    let winner = getQuestionWinner()
+    setPointsToPlayers()
 
     self.gameData?.removeFirst()
     showQuestion(question: (self.gameData?.first!)!)
     
   }
   
-  func getQuestionWinner() -> Int {
+  func setPointsToPlayers() {
 
+    guard gettedAnswers.count > 0 else {
+      return
+    }
+    
     let sortedArray = (gettedAnswers as NSArray).sortedArray(using: [NSSortDescriptor(key: "isCorrect", ascending: false)]) as! [[String:AnyObject]]
-
     
     for i in 0...sortedArray.count-1 {
       let item = sortedArray[i]
@@ -258,7 +265,7 @@ class GQGameViewController: UIViewController {
           break
           
         case 3:
-          let x = (item as [String:Any])["time"] as! Float
+          let x = round(((item as [String:Any])["time"] as! Double)*1000)
           let y = Double(round(100*x)/1000)
           pointsToAdd = Int(100*y)
           break
@@ -278,7 +285,6 @@ class GQGameViewController: UIViewController {
 
     gettedAnswers.removeAllObjects()
 
-    return 2
   }
   
   func getRoundWinner(round: Int) -> Int {
