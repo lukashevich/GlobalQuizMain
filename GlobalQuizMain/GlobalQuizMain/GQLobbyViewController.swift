@@ -57,8 +57,27 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     centralManager?.stopScan()
 
     for peripheral in peripherals {
-      print((peripheral as! CBPeripheral).state.rawValue)
-      centralManager?.connect(finded[(peripheral as! CBPeripheral).name!]!, options: nil)
+      for char:CBCharacteristic in ((peripheral as! CBPeripheral).services?.first?.characteristics!)! {
+        print(char.uuid)
+        
+        if  char.uuid.isEqual(PERIPHERAL_START_GAME_CHAR) {
+          //        peripheral.setNotifyValue(true, for: char)
+          
+          let playerId:Int = (peripherals.index(of: peripheral))
+          
+          (peripheral as! CBPeripheral).writeValue("Start,\(playerId+1)".data(using:String.Encoding.utf8)!, for:char, type:CBCharacteristicWriteType.withResponse)
+          //        let playerIdData = Data(bytes: &playerId,
+          //                             count: MemoryLayout.size(ofValue: playerId))
+          //        peripheral.writeValue(playerIdData, for:char, type:CBCharacteristicWriteType.withResponse)
+          
+          //peripheral.writeValue(NSKeyedArchiver.archivedData(withRootObject: (self.gameData?.first!)!), for:char, type:CBCharacteristicWriteType.withResponse)
+          
+        } else if char.uuid.isEqual(PERIPHERAL_ANSWER_CHAR) {
+          (peripheral as! CBPeripheral).setNotifyValue(true, for: char)
+          
+        }
+      }
+
     }
     
 //    centralManager?.connect(iPadPeripheral!, options: nil)
@@ -109,39 +128,45 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
   func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
     print("DIscovered ")
     print(peripheral.name ?? "NOTHING")
+    print(advertisementData )
+
     print("\n")
 //    print(advertisementData.description )
     
-    if !peripherals.contains(peripheral){
-      
+//    if !peripherals.contains(peripheral){
+    
       peripheral.delegate = self
       
-      if  peripheral.name == "iPad mini" ||
-          peripheral.name == "Lukashevich\'s iPhone" ||
-          peripheral.name == "Moto G (4)" {
+//      if  peripheral.name == "iPad mini" ||
+//          peripheral.name == "Lukashevich\'s iPhone" ||
+//          peripheral.name == "Moto G (4)" {
       
+        print("advertisementData")
+        print(advertisementData)
+
 //        peripherals.add(peripheral)
 
-        if  peripheral.name == "iPad mini" {
-          iPadPeripheral = peripheral
-          peripherals.add(iPadPeripheral ?? peripheral)
-
-        }
+//        if  peripheral.name == "iPad mini" {
+//          iPadPeripheral = peripheral
+//          peripherals.add(iPadPeripheral ?? peripheral)
+//
+//        }
+//      
+//        if  peripheral.name == "Lukashevich\'s iPhone" {
+//          iPhonePeripheral = peripheral
+//          peripherals.add(iPhonePeripheral ?? peripheral)
       
-        if  peripheral.name == "Lukashevich\'s iPhone" {
-          iPhonePeripheral = peripheral
-          peripherals.add(iPhonePeripheral ?? peripheral)
-          
-        }
-        
+//        }
+    if  peripheral.name != nil {
         finded.updateValue(peripheral, forKey: peripheral.name!)
-
-        peripheralsTableView.reloadData()
-      }
-      
-//     centralManager?.connect(peripheral, options: nil)
-      
     }
+//
+//        peripheralsTableView.reloadData()
+//      }
+      
+     centralManager?.connect(peripheral, options: nil)
+      
+//    }
   }
   
   func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
@@ -159,33 +184,22 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
   
   func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
     
-    validatedPeripherals.add(peripheral)
-//    centralManager?.cancelPeripheralConnection(peripheral)
+    if (peripheral.services?.first?.uuid.isEqual(PERIPHERAL_UUID))! {
+      if !validatedPeripherals.contains(peripheral) {
+        validatedPeripherals.add(peripheral)
+        peripherals.add(peripheral)
+        finded.updateValue(peripheral, forKey: peripheral.name!)
+        peripheralsTableView.reloadData()
+      }
+
+    } else {
+      centralManager?.cancelPeripheralConnection(peripheral)
+      return
+    }
     
     print("didDiscoverCharacteristicsFor")
-    print(service.characteristics)
-    print(service.uuid)
-    for char:CBCharacteristic in service.characteristics! {
-      print(char.uuid)
-      
-      if  char.uuid.isEqual(PERIPHERAL_START_GAME_CHAR) {
-        //        peripheral.setNotifyValue(true, for: char)
-        
-        let playerId:Int = (peripherals.index(of: peripheral))
 
-        peripheral.writeValue("Start,\(playerId+1)".data(using:String.Encoding.utf8)!, for:char, type:CBCharacteristicWriteType.withResponse)
-//        let playerIdData = Data(bytes: &playerId,
-//                             count: MemoryLayout.size(ofValue: playerId))
-//        peripheral.writeValue(playerIdData, for:char, type:CBCharacteristicWriteType.withResponse)
-
-        //peripheral.writeValue(NSKeyedArchiver.archivedData(withRootObject: (self.gameData?.first!)!), for:char, type:CBCharacteristicWriteType.withResponse)
-        
-      } else if char.uuid.isEqual(PERIPHERAL_ANSWER_CHAR) {
-        peripheral.setNotifyValue(true, for: char)
-        
-      }
     }
-  }
   
   
   func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
@@ -218,6 +232,14 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     peripheral.discoverServices([PERIPHERAL_SERVICE_UUID])
     
     print(peripheral.services ?? "nothing")
+    print(peripheral)
+    print(peripheral.readRSSI())
+
+//    peripherals.add(iPhonePeripheral ?? peripheral)
+//
+//    finded.updateValue(peripheral, forKey: peripheral.name!)
+//    
+//    peripheralsTableView.reloadData()
     
 //    centralManager?.scanForPeripherals(withServices: [PERIPHERAL_SERVICE_UUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey:true])
   }
