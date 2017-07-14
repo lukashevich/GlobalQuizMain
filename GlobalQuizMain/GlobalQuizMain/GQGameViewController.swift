@@ -13,11 +13,16 @@ import CoreBluetooth
 class GQGameViewController: UIViewController {
   
   var data:NSMutableData?
-
+  
   let serverName = "http://quiz.vany.od.ua/wp-json/quiz"
   
+  let getQategoriesMethod = "qategories?played="
+  let getQuestionsForQategoryMethod = "questions?qategory=18&n=1"
+  let getQategoriesMethod2 = "qategories"
+
+  
   var gameData:[[String:Any]]?
-  var themes:[String:Any]?
+  var themes:[[String:Any]]?
   var gameRound = 0
   var rightAnswer = 0
 
@@ -28,6 +33,8 @@ class GQGameViewController: UIViewController {
   var playersPoints:[String:Int] = [String:Int]()
   var timer = Timer()
   var seconds:Int = Int(roundTimerValue)
+  
+  var isThemePicking:Bool = false
 
   @IBOutlet weak var timerLabel: UILabel!
   @IBOutlet weak var pickerView: UIView!
@@ -44,6 +51,8 @@ class GQGameViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    questionLabel.adjustsFontSizeToFitWidth = true
+    questionLabel.minimumScaleFactor = 0.2
     
     for i in 1...playersCount {
       roundResults[String(i)] = NSMutableArray()
@@ -60,34 +69,43 @@ class GQGameViewController: UIViewController {
   
   func requestForThemes(forRound:Int)  {
     
-
-    questionLabel.text = gameTypes[gameRound%(gameTypes.count)]
+    isThemePicking = true
     
-    let nextTryData:Data = "{\"id1\":\"Название темы1\", \"id2\":\"Название темы2\", \"id3\":\"Название темы3\", \"id4\":\"Название темы4\"}".data(using: .utf8)!
+    let requestStr = serverName+"/"+getQategoriesMethod
     
-    self.themes = try! JSONSerialization.jsonObject(with:nextTryData,
-                                                      options: JSONSerialization.ReadingOptions.mutableContainers) as! [String : Any]
-    showThemes(theme: self.themes!)
-    self.pickerView.isHidden = false
-
+    Alamofire.request(requestStr).responseJSON { response in
+      
+      print(response.result.value)
+      
+      
+      let nextTryData:Data = (response.result.value as! String).data(using: .utf8)!
+      
+      self.themes = try! JSONSerialization.jsonObject(with:nextTryData,
+                                                      options: JSONSerialization.ReadingOptions.mutableContainers) as! [[String : Any]]
+            
+      self.showThemes(theme: self.themes!)
+      self.pickerView.isHidden = false
     
-    let data:Data = "firstPicked".data(using: .utf8)!
-    perform(#selector(themeGetted), with: data, afterDelay: 2.0)
+//      let data:Data = "firstPicked".data(using: .utf8)!
+//      self.perform(#selector(self.themeGetted), with: data, afterDelay: 2.0)
 
-    
-
+    }
   }
 
   func requestForQuestions(theme:String){
     
+    isThemePicking = false
+    
     let themeName = theme
     
     let requestStr = serverName + "/" + themeName + "/"
-    
+    print(requestStr)
+
     Alamofire.request(requestStr).responseJSON { response in
       
       let nextTryData:Data = (response.result.value as! String).data(using: .utf8)!
-      
+      print(response.result.value)
+
       self.gameData = try! JSONSerialization.jsonObject(with:nextTryData,
                                                         options: JSONSerialization.ReadingOptions.mutableContainers) as! [[String : Any]]
       
@@ -129,9 +147,9 @@ class GQGameViewController: UIViewController {
     
     stopTimer()
     
-    print(gettedAnswers)
-
-    print(playersPoints)
+//    print(gettedAnswers)
+//
+//    print(playersPoints)
     
     guard ((self.gameData?.count)! > 1) else {
       pickerView.isHidden = true
@@ -150,7 +168,7 @@ class GQGameViewController: UIViewController {
   
   func showQuestion(question:[String:Any]){
     
-    print(playersPoints)
+//    print(playersPoints)
     
     questionTime = Date().timeIntervalSince1970
     
@@ -178,16 +196,16 @@ class GQGameViewController: UIViewController {
 
   }
   
-  func showThemes(theme:[String:Any]){
+  func showThemes(theme:[[String:Any]]){
+    
+     //[["qategory": Шахматы, "ID": 27], ["qategory": Биология, "ID": 6], ["qategory": Мосты, "ID": 49]]
     
     self.questionLabel.text = gameTypes[gameRound%(gameTypes.count)]
     
-    let keys = Array(theme.keys)
-    
-    self.firstAnswer.text =   theme[keys[0]] as? String
-    self.secondAnswer.text =  theme[keys[1]] as? String
-    self.thirdAnswer.text =   theme[keys[2]] as? String
-    self.fourthAnswer.text =  theme[keys[3]] as? String
+    self.firstAnswer.text =   theme[0]["qategory"] as? String
+    self.secondAnswer.text =  theme[1]["qategory"] as? String
+    self.thirdAnswer.text =   theme[2]["qategory"] as? String
+    self.fourthAnswer.text =  theme[3]["qategory"] as? String
 
   }
   
@@ -205,37 +223,62 @@ class GQGameViewController: UIViewController {
   func answerGetted(data:Data){
     
     let gettedAnswer:String = String.init(data: data, encoding: .utf8)!
-    
     let answerComponents = gettedAnswer.components(separatedBy: ",")
     
-    let playerRes:NSMutableDictionary = NSMutableDictionary()
-    playerRes.setObject((Int(answerComponents.first!) == rightAnswer), forKey: "isCorrect" as NSCopying)
-    playerRes.setObject(Date().timeIntervalSince1970 - questionTime, forKey: "time" as NSCopying)
-    playerRes.setObject(answerComponents.last!, forKey: "id" as NSCopying)
+    if isThemePicking {
 
-    (roundResults[playerRes["id"] as! String] as! NSMutableArray).add(playerRes)
-
-    gettedAnswers.add(playerRes)
-    
-    guard gettedAnswers.count == playersCount else {
-      return
-    }
-    
-    stopTimer()
-    
-    guard ((self.gameData?.count)! > 1) else {
-      pickerView.isHidden = true
+      let pickedTheme = self.themes?[Int(answerComponents.first!)! - 1]
+      let themeId:Int = Int(pickedTheme?["ID"] as! String)!
+      let theme = "questions?qategory=\(themeId)&n=\(kQuestionCount)"
+      requestForQuestions(theme: theme)
       
-      self.perform(#selector(requestForThemes), with: gameRound, afterDelay: kGameRoundDelay)
-
-      return
+      
+    } else {
+      let playerRes:NSMutableDictionary = NSMutableDictionary()
+      playerRes.setObject((Int(answerComponents.first!) == rightAnswer), forKey: "isCorrect" as NSCopying)
+      playerRes.setObject(Date().timeIntervalSince1970 - questionTime, forKey: "time" as NSCopying)
+      playerRes.setObject(answerComponents.last!, forKey: "id" as NSCopying)
+      
+      
+      guard !checkForSecondAnswer(playerId:(playerRes["id"] as! String)) else {
+        return
+      }
+      
+      (roundResults[playerRes["id"] as! String] as! NSMutableArray).add(playerRes)
+      gettedAnswers.add(playerRes)
+      
+      guard gettedAnswers.count >= playersCount else {
+        return
+      }
+      
+      stopTimer()
+      
+      guard ((self.gameData?.count)! > 1) else {
+        pickerView.isHidden = true
+        
+        self.perform(#selector(requestForThemes), with: gameRound, afterDelay: kGameRoundDelay)
+        
+        return
+      }
+      
+      setPointsToPlayers()
+      
+      self.gameData?.removeFirst()
+      showQuestion(question: (self.gameData?.first!)!)
     }
     
-    setPointsToPlayers()
+  }
+  
+  func checkForSecondAnswer(playerId:String) -> Bool {
+    print(gettedAnswers)
 
-    self.gameData?.removeFirst()
-    showQuestion(question: (self.gameData?.first!)!)
+    for i in 0 ..< gettedAnswers.count {
+      if ((gettedAnswers[i] as! Dictionary<String, Any>)["id"]! as! String).isEqual(playerId) {
+        return true
+      }
+    }
     
+    return false
   }
   
   func setPointsToPlayers() {

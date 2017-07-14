@@ -15,6 +15,9 @@ let gameTypes:Array = ["Правильные ответы",
 let kGameRoundDelay = 2.0
 let roundTimerValue:Int = 59 //This variable will hold a starting value of seconds. It could be any amount above 0.
 
+let kQuestionCount = 4
+
+
 //  ["Правильные ответы",
 //                       "5 первых правильных ответов",
 //                       "Кто быстрее",

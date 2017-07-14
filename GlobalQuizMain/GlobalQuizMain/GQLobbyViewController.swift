@@ -41,6 +41,7 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
   
   var game:GQGameViewController?
   
+  
   @IBOutlet weak var peripheralsTableView: UITableView!
   
     override func viewDidLoad() {
@@ -58,7 +59,7 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
 
     for peripheral in peripherals {
       for char:CBCharacteristic in ((peripheral as! CBPeripheral).services?.first?.characteristics!)! {
-        print(char.uuid)
+//        print(char.uuid)
         
         if  char.uuid.isEqual(PERIPHERAL_START_GAME_CHAR) {
           //        peripheral.setNotifyValue(true, for: char)
@@ -91,14 +92,14 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     for peripheral in peripherals {
-      print((peripheral as! CBPeripheral).state.rawValue)
+//      print((peripheral as! CBPeripheral).state.rawValue)
       
     }
 
-    print("validatedPeripherals")
+//    print("validatedPeripherals")
 
-    print(validatedPeripherals)
-    print(peripherals)
+//    print(validatedPeripherals)
+//    print(peripherals)
 
     if segue.identifier == "startGameSegue" {
       game = (segue.destination as! GQGameViewController)
@@ -126,11 +127,11 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
   }
   
   func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-    print("DIscovered ")
-    print(peripheral.name ?? "NOTHING")
-    print(advertisementData )
+//    print("DIscovered ")
+//    print(peripheral.name ?? "NOTHING")
+//    print(advertisementData )
 
-    print("\n")
+//    print("\n")
 //    print(advertisementData.description )
     
 //    if !peripherals.contains(peripheral){
@@ -141,8 +142,8 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
 //          peripheral.name == "Lukashevich\'s iPhone" ||
 //          peripheral.name == "Moto G (4)" {
       
-        print("advertisementData")
-        print(advertisementData)
+//        print("advertisementData")
+//        print(advertisementData)
 
 //        peripherals.add(peripheral)
 
@@ -206,17 +207,16 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     
     if characteristic.uuid.isEqual(PERIPHERAL_ANSWER_CHAR) {
        game?.answerGetted(data: characteristic.value!)
-    } else if characteristic.uuid.isEqual(PERIPHERAL_ANSWER_CHAR) {
-      game?.themeGetted(data: characteristic.value!)
     }
-
-    
-    
+//    else if characteristic.uuid.isEqual(PERIPHERAL_ANSWER_CHAR) {
+//      game?.themeGetted(data: characteristic.value!)
+//    }
+ 
   }
   
   func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
     
-    print(error.debugDescription)
+//    print(error.debugDescription)
     
     if characteristic.isNotifying {
       characteristic.value
@@ -231,9 +231,9 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     print("didConnect")
     peripheral.discoverServices([PERIPHERAL_SERVICE_UUID])
     
-    print(peripheral.services ?? "nothing")
-    print(peripheral)
-    print(peripheral.readRSSI())
+//    print(peripheral.services ?? "nothing")
+//    print(peripheral)
+//    print(peripheral.readRSSI())
 
 //    peripherals.add(iPhonePeripheral ?? peripheral)
 //

@@ -159,6 +159,7 @@
 		7F1BA13C1E43551B00C75271 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				7F1BA13E1E43555D00C75271 /* redbook.png */,
 				7F1BA13D1E43552300C75271 /* Images */,
 			);
 			name = Source;
@@ -167,7 +168,6 @@
 		7F1BA13D1E43552300C75271 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				7F1BA13E1E43555D00C75271 /* redbook.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
