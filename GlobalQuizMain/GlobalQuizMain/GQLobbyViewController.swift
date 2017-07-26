@@ -34,6 +34,7 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
   var discoveredPeripheral:CBPeripheral?
   var peripherals:NSMutableArray = NSMutableArray()
   var validatedPeripherals:NSMutableArray = NSMutableArray()
+  var playersNames:[String:String] = [String:String]()
 
   var iPadPeripheral:CBPeripheral?
   var iPhonePeripheral:CBPeripheral?
@@ -67,6 +68,7 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
           let playerId:Int = (peripherals.index(of: peripheral))
           
           (peripheral as! CBPeripheral).writeValue("Start,\(playerId+1)".data(using:String.Encoding.utf8)!, for:char, type:CBCharacteristicWriteType.withResponse)
+          playersNames.updateValue((peripheral as! CBPeripheral).name!, forKey: String(playerId+1))
           //        let playerIdData = Data(bytes: &playerId,
           //                             count: MemoryLayout.size(ofValue: playerId))
           //        peripheral.writeValue(playerIdData, for:char, type:CBCharacteristicWriteType.withResponse)
@@ -103,7 +105,7 @@ class GQLobbyViewController: UIViewController, CBCentralManagerDelegate, CBPerip
 
     if segue.identifier == "startGameSegue" {
       game = (segue.destination as! GQGameViewController)
-      game?.playersCount = peripherals.count
+      game?.playersNames = playersNames
     }
   }
   

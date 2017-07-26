@@ -26,8 +26,9 @@ class GQGameViewController: UIViewController {
   var gameRound = 0
   var rightAnswer = 0
 
-  var playersCount:Int!
+  var playersNames:[String:String]!
   var gettedAnswers:NSMutableArray = NSMutableArray()
+  var pickedThemes:NSMutableArray = NSMutableArray()
   var roundResults:[String:Any] = [String:Any]()
   
   var playersPoints:[String:Int] = [String:Int]()
@@ -45,6 +46,8 @@ class GQGameViewController: UIViewController {
   @IBOutlet weak var thirdAnswer: UILabel!
   @IBOutlet weak var fourthAnswer: UILabel!
   @IBOutlet weak var questionLabel: UILabel!
+ 
+  @IBOutlet weak var topView: UIVisualEffectView!
   
   var questionTime:TimeInterval!
   
@@ -54,7 +57,7 @@ class GQGameViewController: UIViewController {
     questionLabel.adjustsFontSizeToFitWidth = true
     questionLabel.minimumScaleFactor = 0.2
     
-    for i in 1...playersCount {
+    for i in 1...playersNames.count {
       roundResults[String(i)] = NSMutableArray()
       playersPoints[String(i)] = 0
     }
@@ -67,12 +70,21 @@ class GQGameViewController: UIViewController {
     
   }
   
+  
   func requestForThemes(forRound:Int)  {
     
     isThemePicking = true
     
-    let requestStr = serverName+"/"+getQategoriesMethod
+    var pickedThemesString = ""
+    for i in 0 ..< pickedThemes.count {
+      pickedThemesString.append(",\(pickedThemes[i])")
+    }
+    if pickedThemes.count != 0 {
+      pickedThemesString.remove(at: pickedThemesString.startIndex)
+    }
     
+    let requestStr = serverName+"/"+getQategoriesMethod+pickedThemesString
+    print(requestStr)
     Alamofire.request(requestStr).responseJSON { response in
       
       print(response.result.value)
@@ -92,6 +104,16 @@ class GQGameViewController: UIViewController {
     }
   }
 
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+    if segue.identifier == "endGameSegue" {
+      let endGame:GQEndGameViewController = (segue.destination as! GQEndGameViewController)
+      endGame.winners = playersPoints
+      endGame.playersNames = playersNames
+    }
+  }
+
+  
   func requestForQuestions(theme:String){
     
     isThemePicking = false
@@ -168,6 +190,8 @@ class GQGameViewController: UIViewController {
   
   func showQuestion(question:[String:Any]){
     
+    timerLabel.isHidden = false
+
 //    print(playersPoints)
     
     questionTime = Date().timeIntervalSince1970
@@ -197,6 +221,8 @@ class GQGameViewController: UIViewController {
   }
   
   func showThemes(theme:[[String:Any]]){
+    
+    timerLabel.isHidden = true
     
      //[["qategory": Шахматы, "ID": 27], ["qategory": Биология, "ID": 6], ["qategory": Мосты, "ID": 49]]
     
@@ -230,6 +256,7 @@ class GQGameViewController: UIViewController {
       let pickedTheme = self.themes?[Int(answerComponents.first!)! - 1]
       let themeId:Int = Int(pickedTheme?["ID"] as! String)!
       let theme = "questions?qategory=\(themeId)&n=\(kQuestionCount)"
+      pickedThemes.add(themeId)
       requestForQuestions(theme: theme)
       
       
@@ -240,20 +267,27 @@ class GQGameViewController: UIViewController {
       playerRes.setObject(answerComponents.last!, forKey: "id" as NSCopying)
       
       
-      guard !checkForSecondAnswer(playerId:(playerRes["id"] as! String)) else {
+      if !checkForSecondAnswer(playerId:(playerRes["id"] as! String)) {
+        (roundResults[playerRes["id"] as! String] as! NSMutableArray).add(playerRes)
+        gettedAnswers.add(playerRes)
+
+      }
+      
+      guard gettedAnswers.count >= playersNames.count else {
         return
       }
       
-      (roundResults[playerRes["id"] as! String] as! NSMutableArray).add(playerRes)
-      gettedAnswers.add(playerRes)
-      
-      guard gettedAnswers.count >= playersCount else {
-        return
-      }
+      setPointsToPlayers()
       
       stopTimer()
-      
+
       guard ((self.gameData?.count)! > 1) else {
+        
+        guard kGameRoundCount > pickedThemes.count else {
+          performSegue(withIdentifier: "endGameSegue", sender: self)
+          return
+        }
+        
         pickerView.isHidden = true
         
         self.perform(#selector(requestForThemes), with: gameRound, afterDelay: kGameRoundDelay)
@@ -261,13 +295,52 @@ class GQGameViewController: UIViewController {
         return
       }
       
-      setPointsToPlayers()
-      
-      self.gameData?.removeFirst()
-      showQuestion(question: (self.gameData?.first!)!)
+      self.performSelector(onMainThread: #selector(showRightAnswerAndNextQuestion), with: nil, waitUntilDone: true)
     }
     
   }
+  
+  func showRightAnswerAndNextQuestion() {
+    var viewForAnimate:UILabel?
+    
+    switch rightAnswer {
+    case 1:
+      viewForAnimate = firstAnswer
+      break;
+      
+    case 2:
+      viewForAnimate = secondAnswer
+      
+      break;
+      
+    case 3:
+      viewForAnimate = thirdAnswer
+      
+      break;
+      
+    case 4:
+      viewForAnimate = fourthAnswer
+      
+      break;
+      
+    default:
+      viewForAnimate = nil
+    }
+    
+    UIView.animate(withDuration: 0.25, animations: {
+      viewForAnimate!.alpha = 0.0
+    }) { (true) in
+      UIView.animate(withDuration: 0.25, animations: {
+        viewForAnimate!.alpha = 1.0
+      }) { (true) in
+        self.gameData?.removeFirst()
+        self.showQuestion(question: (self.gameData?.first!)!)
+      }
+      
+    }
+    
+  }
+  
   
   func checkForSecondAnswer(playerId:String) -> Bool {
     print(gettedAnswers)
@@ -303,7 +376,7 @@ class GQGameViewController: UIViewController {
           break
           
         case 2:
-          pointsToAdd = 100*(playersCount-i)
+          pointsToAdd = 100*(playersNames.count-i)
           playersPoints[(item as [String:Any])["id"] as! String] = playerPoints + pointsToAdd
           break
           
@@ -322,6 +395,17 @@ class GQGameViewController: UIViewController {
         }
         
         playersPoints[(item as [String:Any])["id"] as! String] = playerPoints + pointsToAdd
+        
+        
+        var id:NSNumber?
+        if let myInteger = Int((item as [String:Any])["id"] as! String) {
+          id = NSNumber(value:myInteger)
+        }
+        
+        print(id!)
+        
+        let playerLabel = topView.viewWithTag(id as! Int) as! UILabel
+        playerLabel.text = "ID \(playerLabel.tag):\(playerPoints + pointsToAdd)"
 
       }
     }
