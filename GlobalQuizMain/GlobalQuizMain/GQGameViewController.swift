@@ -20,6 +20,7 @@ class GQGameViewController: UIViewController {
   let getQuestionsForQategoryMethod = "questions?qategory=18&n=1"
   let getQategoriesMethod2 = "qategories"
 
+  var isGamePaused = false
   
   var gameData:[[String:Any]]?
   var themes:[[String:Any]]?
@@ -114,6 +115,33 @@ class GQGameViewController: UIViewController {
   }
 
   
+  func pauseGame(data:Data){
+   
+    isGamePaused = !isGamePaused
+
+    if isGamePaused {
+      timer.invalidate()
+      let pauseView:UILabel = UILabel.init(frame: view.frame)
+      pauseView.tag = 99
+      pauseView.textAlignment = NSTextAlignment.center
+      pauseView.font = UIFont.init(name: pauseView.font.familyName, size: 44)
+      pauseView.backgroundColor = UIColor.white
+      pauseView.text = "PAUSE"
+      pauseView.alpha = 0.7
+      view.addSubview(pauseView)
+    } else {
+timer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GQGameViewController.updateTimer)), userInfo: nil, repeats: true)
+      view.viewWithTag(99)?.removeFromSuperview()
+    }
+    
+
+  }
+  
+  
+  func endGame() {
+    self.dismiss(animated: true, completion: nil)
+  }
+  
   func requestForQuestions(theme:String){
     
     isThemePicking = false
@@ -146,7 +174,6 @@ class GQGameViewController: UIViewController {
   }
   func updateTimer() {
     seconds -= 1     //This will decrement(count down)the seconds.
-    
     if seconds == 0 {
       finishRound()
     }
@@ -250,6 +277,8 @@ class GQGameViewController: UIViewController {
     
     let gettedAnswer:String = String.init(data: data, encoding: .utf8)!
     let answerComponents = gettedAnswer.components(separatedBy: ",")
+    
+    print(answerComponents)
     
     if isThemePicking {
 
